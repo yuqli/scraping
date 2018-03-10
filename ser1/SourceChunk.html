@@ -1,0 +1,59 @@
+<html>
+
+<script>
+    function getcity() {
+        var aa = $("#province").find("option:selected").val();
+        $.post('../data_ashx/GetAirData.ashx', { cmd: 'getcity', provinceid: aa }, function (data) {
+            var jsonData = eval('(' + data + ')');
+            if (jsonData.isSuccess == '1') {
+                $("#city").removeAttr("disabled");
+                $("#city").html(unescape(jsonData.Content));
+            }
+            else {
+                $("#city").attr("disabled", "disabled");
+                $("#city").html("");
+            }
+        });
+    }
+</script>
+
+</html>
+
+
+
+function OpenHCHDetail(mid) {
+
+    //请求
+    $.post('../data_ashx/GetAirData.ashx',
+    { headers: { 'Cookie': document.cookie }, cmd: 'gethch_content',
+        mid: mid
+    },
+     function (data) {
+         var jsonData = eval('(' + data + ')');
+         if (jsonData.isSuccess == '1') {
+
+             if (jsonData.Content != "") {
+
+                 $("#leftdiv_hchcontent_content").html(unescape(jsonData.Content));
+             }
+             else {
+                 $("#leftdiv_hchcontent_content").html("");
+             }
+
+             $("#div_hchname").html(jsonData.MName);
+
+             //$("#leftdiv_content_title").show();
+             $("#leftdiv_list").hide();
+             $("#leftdiv_content").hide();
+             $("#leftdiv_hchcontent").show();
+
+         }
+         else {
+             $("#table_con").html("数据请求失败！");
+
+         }
+     });
+
+
+
+}
